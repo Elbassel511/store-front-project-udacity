@@ -2,21 +2,21 @@ import client from "../database";
 
 type Status = "closed" | "opened";
 
-export type Order = {
-  id: string;
+export type order = {
+  id?: number;
   status: Status;
   customer_id: number;
 };
 
-export type Order_product = {
-  id: number;
-  quantity: number;
+export type order_product = {
+  id?: number;
+  quantity?: number;
   order_id: number;
   product_id: number;
 };
 
-export class order {
-  async index(): Promise<Order[]> {
+export class Order {
+  async index(): Promise<order[]> {
     try {
       const conn = await client.connect();
       const sql = "SELECT * FROM orders";
@@ -28,7 +28,7 @@ export class order {
     }
   }
 
-  async show(id: string): Promise<Order> {
+  async show(id: string): Promise<order> {
     try {
       const conn = await client.connect();
       const sql = "SELECT * FROM orders WHERE id = $1";
@@ -40,10 +40,11 @@ export class order {
     }
   }
 
-  async create(order: Order): Promise<Order> {
+  async create(order: order): Promise<order> {
     try {
       const conn = await client.connect();
-      const sql = "INSERT INTO orders (status,customer_id) VALUES ($1,$2)";
+      const sql =
+        "INSERT INTO orders (status,customer_id) VALUES ($1,$2) RETURNING *";
       const data = await conn.query(sql, [order.status, order.customer_id]);
       conn.release();
       return data.rows[0];
@@ -52,7 +53,7 @@ export class order {
     }
   }
 
-  async delete(id: number): Promise<Order> {
+  async delete(id: number): Promise<order> {
     try {
       const conn = await client.connect();
       const sql = "DELETE FROM orders WHERE id = $1";
@@ -64,10 +65,10 @@ export class order {
     }
   }
 
-  async update(order: Order): Promise<Order> {
+  async update(order: order): Promise<order> {
     try {
       const conn = await client.connect();
-      const sql = "UPDATE orders SET status = $2 WHERE id = $1";
+      const sql = "UPDATE orders SET status = $2 WHERE id = $1 RETURNING *";
       const data = await conn.query(sql, [order.id, order.status]);
       conn.release();
       return data.rows[0];
@@ -77,16 +78,16 @@ export class order {
   }
   // ---------------------------order products methods (order status should be checked)-----------------------------------------
 
-  async addProduct(
-    quantity: number,
-    order_id: number,
-    product_id: number
-  ): Promise<Order_product> {
+  async addProduct(orderProduct: order_product): Promise<order_product> {
     try {
       const conn = await client.connect();
       const sql =
-        "INSERT INTO order_products (quantity, order_id, product_id) VALUES ($1,$2,$3)";
-      const data = await conn.query(sql, [quantity, order_id, product_id]);
+        "INSERT INTO order_products (quantity, order_id, product_id) VALUES ($1,$2,$3) RETURNING *";
+      const data = await conn.query(sql, [
+        orderProduct.quantity,
+        orderProduct.order_id,
+        orderProduct.product_id,
+      ]);
       conn.release();
       return data.rows[0];
     } catch (err) {
@@ -94,7 +95,7 @@ export class order {
     }
   }
 
-  async getOrderProducts(id: number): Promise<Order_product[]> {
+  async getorderProducts(id: number): Promise<order_product[]> {
     try {
       const conn = await client.connect();
       const sql = "SELECT * FROM order_products WHERE order_id = $1";
@@ -106,13 +107,13 @@ export class order {
     }
   }
 
-  async updateOrderProduct(
-    order_products: Order_product
-  ): Promise<Order_product> {
+  async updateorderProduct(
+    order_products: order_product
+  ): Promise<order_product> {
     try {
       const conn = await client.connect();
       const sql =
-        "UPDATE order_products SET quantity =$1 WHERE order_id = $2 AND product_id = $3 ";
+        "UPDATE order_products SET quantity =$1 WHERE order_id = $2 AND product_id = $3 RETURNING * ";
       const data = await conn.query(sql, [
         order_products.quantity,
         order_products.order_id,
@@ -125,21 +126,35 @@ export class order {
     }
   }
 
-  async removeOrderProduct(
-    order_products: Order_product
-  ): Promise<Order_product> {
+  async removeorderProduct(
+    product_id: number,
+    order_id: number
+  ): Promise<order_product> {
     try {
       const conn = await client.connect();
       const sql =
         "DELETE FROM order_products WHERE order_id = $1 AND product_id = $2 ";
-      const data = await conn.query(sql, [
-        order_products.order_id,
-        order_products.product_id,
-      ]);
+      const data = await conn.query(sql, [order_id, product_id]);
       conn.release();
       return data.rows[0];
     } catch (err) {
       throw new Error(`couldn't update order. Error:${err}`);
+    }
+  }
+
+  async getProductInOrder(
+    product_id: number,
+    order_id: number
+  ): Promise<order_product> {
+    try {
+      const conn = await client.connect();
+      const sql =
+        "SELECT * FROM order_products WHERE order_id = $1 AND product_id = $2 ";
+      const data = await conn.query(sql, [order_id, product_id]);
+      conn.release();
+      return data.rows[0];
+    } catch (err) {
+      throw new Error(`couldn't get data. Error:${err}`);
     }
   }
 }

@@ -1,11 +1,12 @@
 {
-  "spec_dir": "spec",
+  "spec_dir": "Spec",
   "spec_files": [
-    "../**/tests/*[s]pec.ts"
+    "../src/tests/models/custmerSpec.ts",
+    "../src/tests/models/productSpec.ts",
+    "../src/tests/models/orderSpec.ts",
+    "../src/tests/**/*[sS]pec.ts"
   ],
-  "helpers": [
-    "helpers/**/*.js"
-  ],
+  "helpers": ["../src/tests/helpers/**/*.ts"],
   "reporters": [
     {
       "name": "jasmine-spec-reporter#SpecReporter",
@@ -15,5 +16,5 @@
     }
   ],
   "stopSpecOnExpectationFailure": false,
-  "random": true
+  "random": false
 }
