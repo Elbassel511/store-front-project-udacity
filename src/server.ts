@@ -3,6 +3,8 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 import helmet from "helmet";
 import { productRoutes } from "./handlers/products";
+import { customerRouter } from "./handlers/customers";
+import { orderRouter } from "./handlers/order";
 
 const app: express.Application = express();
 const address: string = "0.0.0.0:3000";
@@ -16,6 +18,8 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/products", productRoutes);
+app.use("/customers", customerRouter);
+app.use("/orders", orderRouter);
 
 app.listen(3000, function () {
   console.log(`starting app on: ${address}`);

@@ -4,7 +4,10 @@ import { Product, ProductTable } from "../models/product";
 const product = new ProductTable();
 export const productRoutes = express.Router();
 
-const create = async (req: express.Request, res: express.Response) => {
+const create = async (
+  req: express.Request,
+  res: express.Response
+): Promise<void> => {
   const name: string = req.body.name;
   const price: number = Number(req.body.price);
   const stock: number = Number(req.body.stock);
@@ -31,7 +34,10 @@ const create = async (req: express.Request, res: express.Response) => {
     });
 };
 
-const del = async (req: express.Request, res: express.Response) => {
+const del = async (
+  req: express.Request,
+  res: express.Response
+): Promise<void> => {
   const id: number = Number(req.params.id);
 
   if (!id) {
@@ -44,7 +50,10 @@ const del = async (req: express.Request, res: express.Response) => {
   });
 };
 
-const show = async (req: express.Request, res: express.Response) => {
+const show = async (
+  req: express.Request,
+  res: express.Response
+): Promise<void> => {
   const id: number = Number(req.params.id);
   if (!id) {
     res.status(400).send("Invalid request");
@@ -55,7 +64,10 @@ const show = async (req: express.Request, res: express.Response) => {
   });
 };
 
-const index = async (req: express.Request, res: express.Response) => {
+const index = async (
+  req: express.Request,
+  res: express.Response
+): Promise<void> => {
   await product
     .index()
     .then((data) => {
@@ -66,7 +78,10 @@ const index = async (req: express.Request, res: express.Response) => {
     });
 };
 
-const update = async (req: express.Request, res: express.Response) => {
+const update = async (
+  req: express.Request,
+  res: express.Response
+): Promise<void> => {
   const id: number = Number(req.params.id);
   if (!id) {
     res.status(400).send("Invalid request");

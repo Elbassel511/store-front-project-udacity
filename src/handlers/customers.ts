@@ -1,0 +1,134 @@
+import express from "express";
+import { Customer, CustomerTable } from "../models/customer";
+import dotenv from "dotenv";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import jwtAuth from "./helpers/jwtAuth";
+
+dotenv.config();
+const { PEPPER, SALT_ROUNDS } = process.env;
+const customer = new CustomerTable();
+
+export const customerRouter = express.Router();
+
+const create = async (req: express.Request, res: express.Response) => {
+  const { first_name, last_name, email }: Customer = req.body;
+  const password = bcrypt.hashSync(
+    req.body.password + PEPPER,
+    Number(SALT_ROUNDS)
+  );
+
+  if (!first_name || !password) {
+    res.status(400).send("Invalid data");
+  }
+  await customer
+    .create({
+      first_name,
+      last_name,
+      email,
+      password,
+    })
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      throw new Error(err);
+    });
+};
+
+const show = async (req: express.Request, res: express.Response) => {
+  const id = Number(req.params.id);
+  if (!id) {
+    res.status(400).send("Bad request");
+    return;
+  }
+  await customer
+    .show(id)
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      throw new Error(err);
+    });
+};
+
+const index = async (req: express.Request, res: express.Response) => {
+  await customer
+    .index()
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      throw new Error(err);
+    });
+};
+
+const update = async (req: express.Request, res: express.Response) => {
+  const id = Number(req.params.id);
+  if (!id) {
+    res.status(400).send("Bad request");
+    return;
+  }
+  try {
+    const oldData = await customer.show(id);
+    const first_name = req.body.first_name || oldData.first_name;
+    const last_name = req.body.last_name || oldData.last_name;
+    const email = req.body.email || oldData.email;
+    const password = req.body.password
+      ? bcrypt.hashSync(req.body.password + PEPPER, Number(SALT_ROUNDS))
+      : oldData.password;
+    const newData: Customer = {
+      id,
+      first_name,
+      last_name,
+      email,
+      password,
+    };
+    const data = await customer.update(newData);
+    res.status(200).json(data);
+  } catch (err) {
+    throw new Error(err as unknown as string);
+  }
+};
+
+const del = async (req: express.Request, res: express.Response) => {
+  const id = Number(req.params.id);
+  if (!id) {
+    res.status(400).send("Bad request");
+    return;
+  }
+  await customer
+    .delete(id)
+    .then((data) =>
+      res.status(200).send(`customer with id: ${id} succefully deleted`)
+    )
+    .catch((err) => {
+      throw new Error(err);
+    });
+};
+
+const auth = async (req: express.Request, res: express.Response) => {
+  const email: string = req.body.email;
+  const password: string = req.body.password;
+  if (!email || !password) {
+    res.status(400).send("Invalid Request");
+  }
+  const hashedpassword = (await customer.auth(email))
+    .password as unknown as string;
+  if (bcrypt.compareSync(password + PEPPER, hashedpassword)) {
+    const token: string = jwt.sign(
+      { email },
+      process.env.TOKEN_SECRET as unknown as string
+    );
+    res.status(200).json(token);
+  } else {
+    res.status(401).send("wrong password or email !");
+  }
+};
+
+customerRouter.post("/", create);
+customerRouter.delete("/:id", jwtAuth, del);
+customerRouter.get("/:id", show);
+customerRouter.get("/", jwtAuth, index);
+customerRouter.put("/:id", jwtAuth, update);
+customerRouter.post("/auth", auth);

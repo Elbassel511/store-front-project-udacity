@@ -1,10 +1,10 @@
 import client from "../database";
 
 export type Customer = {
-  id: number;
+  id?: number;
   first_name: string;
-  last_name?: string;
-  email?: string;
+  last_name?: string | undefined;
+  email: string;
   password: string;
 };
 
@@ -21,7 +21,7 @@ export class CustomerTable {
     }
   }
 
-  async show(id: string): Promise<Customer> {
+  async show(id: number): Promise<Customer> {
     try {
       const conn = await client.connect();
       const sql = "SELECT * FROM customers WHERE id = $1";
@@ -83,6 +83,17 @@ export class CustomerTable {
       return data.rows[0];
     } catch (err) {
       throw new Error(`couldn't update product. Error:${err}`);
+    }
+  }
+  async auth(email: string): Promise<Customer> {
+    try {
+      const conn = await client.connect();
+      const sql = "SELECT password FROM customers WHERE email = $1";
+      const data = await conn.query(sql, [email]);
+      conn.release();
+      return data.rows[0];
+    } catch (err) {
+      throw new Error(`couldn't get data. Error:${err}`);
     }
   }
 }
