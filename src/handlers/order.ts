@@ -1,6 +1,7 @@
 import express from "express";
-import { Order, order } from "../models/order";
-import client from "../database";
+import { Order, order, Status, order_product } from "../models/order";
+import orderStatusCheck from "./helpers/orderStatusCheck";
+import jwtAuth from "./helpers/jwtAuth";
 
 const newOrder = new Order();
 
@@ -37,23 +38,178 @@ const create = async (
   req: express.Request,
   res: express.Response
 ): Promise<void> => {
-  const { status, customer_id } = req.params;
-  //   to be continued
+  const customer_id: number = Number(req.body.customer_id);
+
+  const status = "open";
+
+  if (!customer_id) {
+    res.status(400).json("Invalid request !");
+    return;
+  }
+  await newOrder
+    .create({ status, customer_id })
+    .then((data) => res.status(200).json(data))
+    .catch((err) => {
+      throw new Error(err as unknown as string);
+    });
 };
 
 const del = async (
   req: express.Request,
   res: express.Response
-): Promise<void> => {};
+): Promise<void> => {
+  const id: number = Number(req.params.id);
+  if (!id) {
+    res.status(400).json("Invalid Request !");
+  }
+  await newOrder
+    .delete(id)
+    .then(() => res.status(200).json(`order deleted succefully`))
+    .catch((err) => {
+      throw new Error(err as unknown as string);
+    });
+};
 
 const update = async (
   req: express.Request,
   res: express.Response
-): Promise<void> => {};
+): Promise<void> => {
+  const isOpen = req.body.isOpen as boolean;
+  const order_id = Number(req.params.id);
+  if (isOpen === undefined || !order_id) {
+    res.status(400).json("Invalid Request !");
+    return;
+  }
+  const status: Status = isOpen ? "open" : "closed";
+
+  await newOrder
+    .update(status, order_id)
+    .then((data) => res.status(200).json(data))
+    .catch((err) => {
+      throw new Error(err as unknown as string);
+    });
+};
+
+// ------------------------------------------------------------------------//
+//                          products in order                             //
+//  ----------------------------------------------------------------------//
+const OrderProducts = async (
+  req: express.Request,
+  res: express.Response
+): Promise<void> => {
+  const id = Number(req.params.id);
+  if (!id) {
+    res.status(400).json("Invalid Request !");
+  }
+  await newOrder
+    .getorderProducts(id)
+    .then((data) => res.status(200).json(data))
+    .catch((err) => {
+      throw new Error(err as unknown as string);
+    });
+};
+
+const OrderProduct = async (
+  req: express.Request,
+  res: express.Response
+): Promise<void> => {
+  const id = Number(req.params.id);
+  const productId = Number(req.params.productId);
+  if (!id || !productId) {
+    res.status(400).json("Invalid Request !");
+  }
+
+  await newOrder
+    .getProductInOrder(productId, id)
+    .then((data) => res.status(200).json(data))
+    .catch((err) => {
+      throw new Error(err as unknown as string);
+    });
+};
+
+const createOrderProduct = async (
+  req: express.Request,
+  res: express.Response
+): Promise<void> => {
+  const order_id = Number(req.params.id);
+  const product_id = Number(req.params.productId);
+  const quantity = Number(req.body.quantity) || 1;
+  if (!order_id || !product_id) {
+    res.status(400).json("Invalid Request !");
+  }
+  newOrder
+    .addProduct({ order_id, product_id, quantity })
+    .then((data) => res.status(200).json(data))
+    .catch((err) => {
+      throw new Error(err as unknown as string);
+    });
+};
+
+const delOrderProduct = async (
+  req: express.Request,
+  res: express.Response
+): Promise<void> => {
+  const order_id = Number(req.params.id);
+  const product_id = Number(req.params.productId);
+  if (!order_id || !product_id) {
+    res.status(400).json("Invalid Request !");
+  }
+  newOrder
+    .removeorderProduct(product_id, order_id)
+    .then(() => res.status(200).json("product removed succefully"))
+    .catch((err) => {
+      throw new Error(err as unknown as string);
+    });
+};
+const updateOrderProduct = async (
+  req: express.Request,
+  res: express.Response
+): Promise<void> => {
+  const order_id = Number(req.params.id);
+  const product_id = Number(req.params.productId);
+  const quantity = req.body.quantity;
+
+  if (!order_id || !product_id) {
+    res.status(400).json("Invalid Request !");
+  }
+  const OrderProduct: order_product = { order_id, product_id, quantity };
+  newOrder
+    .updateorderProduct(OrderProduct)
+    .then((data) => res.status(200).json(data))
+    .catch((err) => {
+      throw new Error(err as unknown as string);
+    });
+};
+
+// -----------------------------------------------------------------------//
+//                                 Router                                 //
+// -----------------------------------------------------------------------//
 
 export const orderRouter = express.Router();
 orderRouter.get("/", index);
 orderRouter.get("/:id", show);
-orderRouter.post("/", create);
-orderRouter.delete("/:id", del);
-orderRouter.put("/:id", update);
+orderRouter.post("/", jwtAuth, create);
+orderRouter.delete("/:id", jwtAuth, del);
+orderRouter.put("/:id", jwtAuth, update);
+
+// products in order routes
+orderRouter.get("/:id/products", OrderProducts);
+orderRouter.get("/:id/product/:productId", OrderProduct);
+orderRouter.put(
+  "/:id/product/:productId",
+  jwtAuth,
+  orderStatusCheck,
+  updateOrderProduct
+);
+orderRouter.delete(
+  "/:id/product/:productId",
+  jwtAuth,
+  orderStatusCheck,
+  delOrderProduct
+);
+orderRouter.post(
+  "/:id/product/:productId",
+  jwtAuth,
+  orderStatusCheck,
+  createOrderProduct
+);

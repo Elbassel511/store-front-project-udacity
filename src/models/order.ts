@@ -1,6 +1,6 @@
 import client from "../database";
 
-type Status = "closed" | "opened";
+export type Status = "closed" | "open";
 
 export type order = {
   id?: number;
@@ -10,7 +10,7 @@ export type order = {
 
 export type order_product = {
   id?: number;
-  quantity?: number;
+  quantity: number;
   order_id: number;
   product_id: number;
 };
@@ -65,11 +65,11 @@ export class Order {
     }
   }
 
-  async update(order: order): Promise<order> {
+  async update(status: Status, order_id: number): Promise<order> {
     try {
       const conn = await client.connect();
       const sql = "UPDATE orders SET status = $2 WHERE id = $1 RETURNING *";
-      const data = await conn.query(sql, [order.id, order.status]);
+      const data = await conn.query(sql, [order_id, status]);
       conn.release();
       return data.rows[0];
     } catch (err) {
@@ -119,8 +119,8 @@ export class Order {
         order_products.order_id,
         order_products.product_id,
       ]);
-      conn.release();
       return data.rows[0];
+      conn.release();
     } catch (err) {
       throw new Error(`couldn't update order. Error:${err}`);
     }

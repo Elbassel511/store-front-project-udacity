@@ -129,6 +129,6 @@ const auth = async (req: express.Request, res: express.Response) => {
 customerRouter.post("/", create);
 customerRouter.delete("/:id", jwtAuth, del);
 customerRouter.get("/:id", show);
-customerRouter.get("/", jwtAuth, index);
+customerRouter.get("/", index);
 customerRouter.put("/:id", jwtAuth, update);
 customerRouter.post("/auth", auth);
