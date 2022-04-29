@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import jwtAuth from "./helpers/jwtAuth";
+import idCheck from "./helpers/idCheck";
 
 dotenv.config();
 const { PEPPER, SALT_ROUNDS } = process.env;
@@ -37,7 +38,7 @@ const create = async (req: express.Request, res: express.Response) => {
 };
 
 const show = async (req: express.Request, res: express.Response) => {
-  const id = Number(req.params.id);
+  const id = Number(req.params.customerId);
   if (!id) {
     res.status(400).send("Bad request");
     return;
@@ -64,7 +65,7 @@ const index = async (req: express.Request, res: express.Response) => {
 };
 
 const update = async (req: express.Request, res: express.Response) => {
-  const id = Number(req.params.id);
+  const id = Number(req.params.customerId);
   if (!id) {
     res.status(400).send("Bad request");
     return;
@@ -92,7 +93,7 @@ const update = async (req: express.Request, res: express.Response) => {
 };
 
 const del = async (req: express.Request, res: express.Response) => {
-  const id = Number(req.params.id);
+  const id = Number(req.params.customerId);
   if (!id) {
     res.status(400).send("Bad request");
     return;
@@ -113,11 +114,12 @@ const auth = async (req: express.Request, res: express.Response) => {
   if (!email || !password) {
     res.status(400).send("Invalid Request");
   }
-  const hashedpassword = (await customer.auth(email))
-    .password as unknown as string;
-  if (bcrypt.compareSync(password + PEPPER, hashedpassword)) {
+  const user: Customer = await customer.auth(email);
+  const hashedPassword: string = user.password;
+
+  if (bcrypt.compareSync(password + PEPPER, hashedPassword)) {
     const token: string = jwt.sign(
-      { email },
+      user,
       process.env.TOKEN_SECRET as unknown as string
     );
     res.status(200).json(token);
@@ -127,8 +129,8 @@ const auth = async (req: express.Request, res: express.Response) => {
 };
 
 customerRouter.post("/", create);
-customerRouter.delete("/:id", jwtAuth, del);
-customerRouter.get("/:id", show);
+customerRouter.delete("/:customerId", jwtAuth, idCheck, del);
+customerRouter.get("/:customerId", show);
 customerRouter.get("/", index);
-customerRouter.put("/:id", jwtAuth, update);
+customerRouter.put("/:customerId", jwtAuth, idCheck, update);
 customerRouter.post("/auth", auth);

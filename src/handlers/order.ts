@@ -2,6 +2,7 @@ import express from "express";
 import { Order, order, Status, order_product } from "../models/order";
 import orderStatusCheck from "./helpers/orderStatusCheck";
 import jwtAuth from "./helpers/jwtAuth";
+import idCheck from "./helpers/idCheck";
 
 const newOrder = new Order();
 
@@ -188,9 +189,9 @@ const updateOrderProduct = async (
 export const orderRouter = express.Router();
 orderRouter.get("/", index);
 orderRouter.get("/:id", show);
-orderRouter.post("/", jwtAuth, create);
-orderRouter.delete("/:id", jwtAuth, del);
-orderRouter.put("/:id", jwtAuth, update);
+orderRouter.post("/", jwtAuth, idCheck, create);
+orderRouter.delete("/:id", jwtAuth, idCheck, del);
+orderRouter.put("/:id", jwtAuth, idCheck, update);
 
 // products in order routes
 orderRouter.get("/:id/products", OrderProducts);
@@ -198,18 +199,21 @@ orderRouter.get("/:id/product/:productId", OrderProduct);
 orderRouter.put(
   "/:id/product/:productId",
   jwtAuth,
+  idCheck,
   orderStatusCheck,
   updateOrderProduct
 );
 orderRouter.delete(
   "/:id/product/:productId",
   jwtAuth,
+  idCheck,
   orderStatusCheck,
   delOrderProduct
 );
 orderRouter.post(
   "/:id/product/:productId",
   jwtAuth,
+  idCheck,
   orderStatusCheck,
   createOrderProduct
 );

@@ -88,7 +88,7 @@ export class CustomerTable {
   async auth(email: string): Promise<Customer> {
     try {
       const conn = await client.connect();
-      const sql = "SELECT password FROM customers WHERE email = $1";
+      const sql = "SELECT * FROM customers WHERE email = $1";
       const data = await conn.query(sql, [email]);
       conn.release();
       return data.rows[0];

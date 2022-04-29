@@ -19,7 +19,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/products", productRoutes);
 app.use("/customers", customerRouter);
-app.use("/orders", orderRouter);
+app.use("customers/:customerId/orders", orderRouter);
 
 app.listen(3000, function () {
   console.log(`starting app on: ${address}`);
