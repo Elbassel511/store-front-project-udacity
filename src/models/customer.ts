@@ -70,8 +70,8 @@ export class CustomerTable {
          first_name = $2, 
          last_name = $3 , 
          password = $4 ,
-         email = $5,
-         WHERE id = $1 `;
+         email = $5
+         WHERE id = $1 RETURNING * `;
       const data = await conn.query(sql, [
         customer.id,
         customer.first_name,

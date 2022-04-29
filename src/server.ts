@@ -6,7 +6,7 @@ import { productRoutes } from "./handlers/products";
 import { customerRouter } from "./handlers/customers";
 import { orderRouter } from "./handlers/order";
 
-const app: express.Application = express();
+export const app: express.Application = express();
 const address: string = "0.0.0.0:3000";
 
 app.use(morgan("tiny"));
@@ -19,7 +19,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/products", productRoutes);
 app.use("/customers", customerRouter);
-app.use("customers/:customerId/orders", orderRouter);
+app.use("/customers/:customerId/orders", orderRouter);
 
 app.listen(3000, function () {
   console.log(`starting app on: ${address}`);

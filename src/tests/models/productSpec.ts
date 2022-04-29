@@ -38,7 +38,7 @@ describe("product model", () => {
   });
 
   it("show method should return the correct product", async () => {
-    const result = await product.show("1");
+    const result = await product.show(1);
     expect(result).toEqual(dummyProduct);
   });
 

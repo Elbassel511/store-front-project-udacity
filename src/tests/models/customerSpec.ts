@@ -31,6 +31,7 @@ describe("customers model", () => {
       email: "A@B.c",
       password: "123",
     });
+
     expect(result).toEqual({
       id: 1,
       first_name: "ABC",
@@ -54,7 +55,7 @@ describe("customers model", () => {
   });
 
   it("show method should return the correct customer", async () => {
-    const result = await customer.show("1");
+    const result = await customer.show(1);
     expect(result).toEqual({
       id: 1,
       first_name: "ABC",

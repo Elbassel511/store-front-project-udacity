@@ -6,11 +6,12 @@ const newOrder = new Order();
 
 const dummyOrder: order = {
   id: 1,
-  status: "opened",
+  status: "open",
   customer_id: 2,
 };
 const dummycustomer: Customer = {
   id: 2,
+  email: "A@B.c",
   first_name: "A",
   last_name: "B",
   password: "123",
@@ -64,12 +65,15 @@ describe("order model", () => {
     });
 
     it("show method should return the correct newOrder", async () => {
-      const result = await newOrder.show("1");
+      const result = await newOrder.show(1);
       expect(result).toEqual(dummyOrder);
     });
 
     it("update method newOrder data ", async () => {
-      const result = await newOrder.update({ ...dummyOrder, status: "closed" });
+      const result = await newOrder.update(
+        "closed",
+        dummyOrder.id as unknown as number
+      );
       expect(result.status).toEqual("closed");
     });
   });
