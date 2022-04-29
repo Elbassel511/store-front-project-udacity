@@ -9,7 +9,12 @@ const jwtAuth = async (
   res: express.Response,
   next: express.NextFunction
 ) => {
-  const token = req.body.token;
+  const authorizationHeader = req.headers.authorization as unknown as string;
+  const token = authorizationHeader.split(" ")[1];
+  if (!token) {
+    res.status(401).send("Access denied");
+  }
+
   try {
     jwt.verify(token, process.env.TOKEN_SECRET as unknown as string);
     next();
