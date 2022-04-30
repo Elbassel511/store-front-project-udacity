@@ -1,5 +1,7 @@
 import express from "express";
 import { Product, ProductTable } from "../models/product";
+import jwtAuth from "./helpers/jwtAuth";
+import adminCheck from "./helpers/adminCheck";
 
 const product = new ProductTable();
 export const productRoutes = express.Router();
@@ -104,8 +106,8 @@ const update = async (
     });
 };
 
-productRoutes.post("/", create);
-productRoutes.delete("/:id", del);
+productRoutes.post("/", jwtAuth, adminCheck, create);
+productRoutes.delete("/:id", jwtAuth, adminCheck, del);
 productRoutes.get("/:id", show);
 productRoutes.get("/", index);
-productRoutes.put("/:id", update);
+productRoutes.put("/:id", jwtAuth, adminCheck, update);

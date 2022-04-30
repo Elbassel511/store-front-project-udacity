@@ -1,26 +1,35 @@
 import supertest from "supertest";
 import { app } from "../../server";
 import { Product, ProductTable } from "../../models/product";
+import { AdminIns } from "../../models/admin";
 
-// routes to be tested///////////////////////////
-// productRoutes.post("/", create);//////////////
-// productRoutes.delete("/:id", del);////////////
-// productRoutes.get("/:id", show);//////////////
-// productRoutes.get("/", index);////////////////
-// productRoutes.put("/:id", update);////////////
-/////////////////////////////////////////////////
+// productRoutes.post("/", jwtAuth, adminCheck, create);
+// productRoutes.delete("/:id", jwtAuth, adminCheck, del);
+// productRoutes.get("/:id", show);
+// productRoutes.get("/", index);
+// productRoutes.put("/:id", jwtAuth, adminCheck, update);
+
 const dummyProduct: Product = {
   name: "A",
   price: 10.11,
   stock: 10,
 };
-
+let token: string;
 const request = supertest(app);
+const admin = new AdminIns();
 
 describe("Test for products model end point", () => {
-  let token: string;
+  beforeAll(async () => {
+    const response = await request
+      .post("/admins/auth")
+      .send({ name: "B", password: "123" });
+    token = response.body;
+  });
   it("adds a product ", async () => {
-    const response = await request.post("/products").send(dummyProduct);
+    const response = await request
+      .post("/products")
+      .send(dummyProduct)
+      .set("Authorization", "bearer " + token);
     expect(response.status).toBe(200);
     expect(response.body.name).toEqual("A");
   });
@@ -36,12 +45,17 @@ describe("Test for products model end point", () => {
   });
 
   it("update product ", async () => {
-    const response = await request.put("/products/3").send({ stock: 7 });
+    const response = await request
+      .put("/products/3")
+      .send({ stock: 7 })
+      .set("Authorization", "bearer " + token);
     expect(response.status).toBe(200);
     expect(response.body.stock).toBe(7);
   });
   it("delete product", async () => {
-    const response = await request.delete("/products/3");
+    const response = await request
+      .delete("/products/3")
+      .set("Authorization", "bearer " + token);
     expect(response.status).toBe(200);
   });
 });
