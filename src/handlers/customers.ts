@@ -38,7 +38,7 @@ const create = async (req: express.Request, res: express.Response) => {
 };
 
 const show = async (req: express.Request, res: express.Response) => {
-  const id = Number(req.params.customerId);
+  const id = Number(req.params.id);
   if (!id) {
     res.status(400).send("Bad request");
     return;
@@ -65,7 +65,7 @@ const index = async (req: express.Request, res: express.Response) => {
 };
 
 const update = async (req: express.Request, res: express.Response) => {
-  const id = Number(req.params.customerId);
+  const id = Number(req.params.id);
   if (!id) {
     res.status(400).send("Bad request");
     return;
@@ -93,7 +93,7 @@ const update = async (req: express.Request, res: express.Response) => {
 };
 
 const del = async (req: express.Request, res: express.Response) => {
-  const id = Number(req.params.customerId);
+  const id = Number(req.params.id);
   if (!id) {
     res.status(400).send("Bad request");
     return;
@@ -129,8 +129,8 @@ const auth = async (req: express.Request, res: express.Response) => {
 };
 
 customerRouter.post("/", create);
-customerRouter.delete("/:customerId", jwtAuth, idCheck, del);
-customerRouter.get("/:customerId", show);
+customerRouter.delete("/:id", jwtAuth, idCheck, del);
+customerRouter.get("/:id", show);
 customerRouter.get("/", index);
-customerRouter.put("/:customerId", jwtAuth, idCheck, update);
+customerRouter.put("/:id", jwtAuth, idCheck, update);
 customerRouter.post("/auth", auth);

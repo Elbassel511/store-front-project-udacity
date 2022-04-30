@@ -22,7 +22,7 @@ const show = async (
   req: express.Request,
   res: express.Response
 ): Promise<void> => {
-  const id: number = Number(req.params.id);
+  const id: number = Number(req.params.orderId);
   if (!id) {
     res.status(400).send("Invalid request");
     return;
@@ -59,13 +59,13 @@ const del = async (
   req: express.Request,
   res: express.Response
 ): Promise<void> => {
-  const id: number = Number(req.params.id);
+  const id: number = Number(req.params.orderId);
   if (!id) {
     res.status(400).json("Invalid Request !");
   }
   await newOrder
     .delete(id)
-    .then(() => res.status(200).json(`order deleted succefully`))
+    .then(() => res.status(200).json(`order deleted successfully`))
     .catch((err) => {
       throw new Error(err as unknown as string);
     });
@@ -76,7 +76,7 @@ const update = async (
   res: express.Response
 ): Promise<void> => {
   const isOpen = req.body.isOpen as boolean;
-  const order_id = Number(req.params.id);
+  const order_id = Number(req.params.orderId);
   if (isOpen === undefined || !order_id) {
     res.status(400).json("Invalid Request !");
     return;
@@ -98,7 +98,7 @@ const OrderProducts = async (
   req: express.Request,
   res: express.Response
 ): Promise<void> => {
-  const id = Number(req.params.id);
+  const id = Number(req.params.orderId);
   if (!id) {
     res.status(400).json("Invalid Request !");
   }
@@ -114,7 +114,7 @@ const OrderProduct = async (
   req: express.Request,
   res: express.Response
 ): Promise<void> => {
-  const id = Number(req.params.id);
+  const id = Number(req.params.orderId);
   const productId = Number(req.params.productId);
   if (!id || !productId) {
     res.status(400).json("Invalid Request !");
@@ -132,7 +132,7 @@ const createOrderProduct = async (
   req: express.Request,
   res: express.Response
 ): Promise<void> => {
-  const order_id = Number(req.params.id);
+  const order_id = Number(req.params.orderId);
   const product_id = Number(req.params.productId);
   const quantity = Number(req.body.quantity) || 1;
   if (!order_id || !product_id) {
@@ -150,7 +150,7 @@ const delOrderProduct = async (
   req: express.Request,
   res: express.Response
 ): Promise<void> => {
-  const order_id = Number(req.params.id);
+  const order_id = Number(req.params.orderId);
   const product_id = Number(req.params.productId);
   if (!order_id || !product_id) {
     res.status(400).json("Invalid Request !");
@@ -166,7 +166,7 @@ const updateOrderProduct = async (
   req: express.Request,
   res: express.Response
 ): Promise<void> => {
-  const order_id = Number(req.params.id);
+  const order_id = Number(req.params.orderId);
   const product_id = Number(req.params.productId);
   const quantity = req.body.quantity;
 
@@ -188,30 +188,30 @@ const updateOrderProduct = async (
 
 export const orderRouter = express.Router();
 orderRouter.get("/", index);
-orderRouter.get("/:id", show);
+orderRouter.get("/:orderId", show);
 orderRouter.post("/", jwtAuth, idCheck, create);
-orderRouter.delete("/:id", jwtAuth, idCheck, del);
-orderRouter.put("/:id", jwtAuth, idCheck, update);
+orderRouter.delete("/:orderId", jwtAuth, idCheck, del);
+orderRouter.put("/:orderId", jwtAuth, idCheck, update);
 
 // products in order routes
-orderRouter.get("/:id/products", OrderProducts);
-orderRouter.get("/:id/product/:productId", OrderProduct);
+orderRouter.get("/:orderId/products", OrderProducts);
+orderRouter.get("/:orderId/product/:productId", OrderProduct);
 orderRouter.put(
-  "/:id/product/:productId",
+  "/:orderId/product/:productId",
   jwtAuth,
   idCheck,
   orderStatusCheck,
   updateOrderProduct
 );
 orderRouter.delete(
-  "/:id/product/:productId",
+  "/:orderId/product/:productId",
   jwtAuth,
   idCheck,
   orderStatusCheck,
   delOrderProduct
 );
 orderRouter.post(
-  "/:id/product/:productId",
+  "/:orderId/product/:productId",
   jwtAuth,
   idCheck,
   orderStatusCheck,

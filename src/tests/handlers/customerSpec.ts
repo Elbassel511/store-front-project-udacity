@@ -3,8 +3,6 @@ import { app } from "../../server";
 import { Customer, CustomerTable } from "../../models/customer";
 
 const request = supertest(app);
-// end points to be checked
-// customerRouter.put("/:customerId", jwtAuth, idCheck, update);
 
 const customer = new CustomerTable();
 const dummyCustomer: Customer = {
@@ -17,7 +15,7 @@ const dummyCustomer: Customer = {
 
 describe("Test for customer model end point", () => {
   let token: string;
-  it("adds a cutomer ", async () => {
+  it("adds a customer ", async () => {
     const response = await request.post("/customers/").send(dummyCustomer);
     expect(response.status).toBe(200);
     expect(response.body.first_name).toEqual("customer end point test");
@@ -27,7 +25,7 @@ describe("Test for customer model end point", () => {
     const response = await request.get("/customers/");
     expect(response.status).toBe(200);
   });
-  it("should get back dummycustomer", async () => {
+  it("should get back dummy customer", async () => {
     const response = await request.get("/customers/3");
     expect(response.status).toBe(200);
     expect(response.body.first_name).toEqual("customer end point test");

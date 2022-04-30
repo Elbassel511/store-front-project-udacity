@@ -4,6 +4,7 @@
     "../src/tests/models/customerSpec.ts",
     "../src/tests/models/productSpec.ts",
     "../src/tests/models/orderSpec.ts",
+    "../src/tests/models/adminSpec.ts",
     "../src/tests/**/*[Ss]pec.ts"
   ],
   "helpers": ["../src/tests/helpers/**/*.ts"],

@@ -36,7 +36,7 @@ export class ProductTable {
     try {
       const conn = await client.connect();
       const sql =
-        "INSERT INTO products (name,price,stock) VALUES ($1,$2,$3)  RETURNING *";
+        "INSERT INTO products (name,price,stock) VALUES ($1,$2,$3)  RETURNING * ;";
       const data = await conn.query(sql, [
         product.name,
         product.price,
