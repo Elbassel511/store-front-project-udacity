@@ -60,6 +60,14 @@ describe("Test for admin model end point", () => {
       expect(response.body.name).toEqual("A");
     });
 
+    it("reject to add an Admin if name already exist ", async () => {
+      const response = await request
+        .post("/admins/")
+        .send(dummyAdmin)
+        .set("Authorization", "bearer " + token);
+      expect(response.status).toBe(400);
+    });
+
     it("adds an Admin rejected  --not super admins token ", async () => {
       const response = await request.post("/admins/").send(dummyAdmin);
       expect(response.status).toBe(401);

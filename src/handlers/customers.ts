@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import jwtAuth from "./helpers/jwtAuth";
 import idCheck from "./helpers/idCheck";
+import checkEmail from "./helpers/checkEmail";
 
 dotenv.config();
 const { PEPPER, SALT_ROUNDS } = process.env;
@@ -128,7 +129,7 @@ const auth = async (req: express.Request, res: express.Response) => {
   }
 };
 
-customerRouter.post("/", create);
+customerRouter.post("/", checkEmail, create);
 customerRouter.delete("/:id", jwtAuth, idCheck, del);
 customerRouter.get("/:id", show);
 customerRouter.get("/", index);

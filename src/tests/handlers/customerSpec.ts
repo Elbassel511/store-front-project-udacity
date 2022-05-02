@@ -20,6 +20,10 @@ describe("Test for customer model end point", () => {
     expect(response.status).toBe(200);
     expect(response.body.first_name).toEqual("customer end point test");
   });
+  it("reject to add a customer with the same email", async () => {
+    const response = await request.post("/customers/").send(dummyCustomer);
+    expect(response.status).toBe(400);
+  });
 
   it("should get back an array of customers", async () => {
     const response = await request.get("/customers/");
