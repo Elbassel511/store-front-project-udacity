@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import jwtAuth from "./helpers/jwtAuth";
 import idCheck from "./helpers/idCheck";
 import roleCheck from "./helpers/roleCheck";
+import checkName from "./helpers/checkName";
 // need role check
 dotenv.config();
 const { PEPPER, SALT_ROUNDS } = process.env;
@@ -193,7 +194,7 @@ const createSuper = async (
   }
 };
 
-adminRouter.post("/", jwtAuth, roleCheck, create);
+adminRouter.post("/", jwtAuth, roleCheck, checkName, create);
 adminRouter.post("/super", createSuper);
 adminRouter.delete("/:id", jwtAuth, roleCheck, del);
 adminRouter.get("/:id", show);
