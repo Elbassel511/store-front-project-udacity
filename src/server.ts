@@ -21,7 +21,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/products", productRoutes);
 app.use("/customers", customerRouter);
 app.use("/admins", adminRouter);
-app.use("/customers/:id/orders", orderRouter);
+app.use("/customer", orderRouter);
 
 app.listen(3000, function () {
   console.log(`starting app on: ${address}`);

@@ -3,11 +3,13 @@ import { app } from "../../server";
 import { Product, ProductTable } from "../../models/product";
 import { AdminIns } from "../../models/admin";
 
-// productRoutes.post("/", jwtAuth, adminCheck, create);
-// productRoutes.delete("/:id", jwtAuth, adminCheck, del);
-// productRoutes.get("/:id", show);
-// productRoutes.get("/", index);
-// productRoutes.put("/:id", jwtAuth, adminCheck, update);
+// //////////////routes to be tested///////////////////////
+// productRoutes.post("/", jwtAuth, adminCheck, create);////
+// productRoutes.delete("/:id", jwtAuth, adminCheck, del);//
+// productRoutes.get("/:id", show);/////////////////////////
+// productRoutes.get("/", index);///////////////////////////
+// productRoutes.put("/:id", jwtAuth, adminCheck, update);//
+////////////////////////////////////////////////////////////
 
 const dummyProduct: Product = {
   name: "A",

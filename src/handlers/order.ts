@@ -39,7 +39,7 @@ const create = async (
   req: express.Request,
   res: express.Response
 ): Promise<void> => {
-  const customer_id: number = Number(req.body.customer_id);
+  const customer_id: number = Number(req.params.id);
 
   const status = "open";
 
@@ -187,31 +187,31 @@ const updateOrderProduct = async (
 // -----------------------------------------------------------------------//
 
 export const orderRouter = express.Router();
-orderRouter.get("/", index);
-orderRouter.get("/:orderId", show);
-orderRouter.post("/", jwtAuth, idCheck, create);
-orderRouter.delete("/:orderId", jwtAuth, idCheck, del);
-orderRouter.put("/:orderId", jwtAuth, idCheck, update);
+orderRouter.get("/:id/orders/", index);
+orderRouter.get("/:id/orders/:orderId", show);
+orderRouter.post("/:id/orders/", jwtAuth, idCheck, create);
+orderRouter.delete("/:id/orders/:orderId", jwtAuth, idCheck, del);
+orderRouter.put("/:id/orders/:orderId", jwtAuth, idCheck, update);
 
 // products in order routes
-orderRouter.get("/:orderId/products", OrderProducts);
-orderRouter.get("/:orderId/product/:productId", OrderProduct);
+orderRouter.get("/:id/orders/:orderId/products", OrderProducts);
+orderRouter.get("/:id/orders/:orderId/product/:productId", OrderProduct);
 orderRouter.put(
-  "/:orderId/product/:productId",
+  "/:id/orders/:orderId/product/:productId",
   jwtAuth,
   idCheck,
   orderStatusCheck,
   updateOrderProduct
 );
 orderRouter.delete(
-  "/:orderId/product/:productId",
+  "/:id/orders/:orderId/product/:productId",
   jwtAuth,
   idCheck,
   orderStatusCheck,
   delOrderProduct
 );
 orderRouter.post(
-  "/:orderId/product/:productId",
+  "/:id/orders/:orderId/product/:productId",
   jwtAuth,
   idCheck,
   orderStatusCheck,

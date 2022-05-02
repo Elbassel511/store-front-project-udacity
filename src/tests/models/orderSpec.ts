@@ -114,5 +114,5 @@ describe("order model", () => {
     const result = await newOrder.index();
     expect(result).toEqual([]);
   });
-  afterAll(() => customer.delete(1));
+  afterAll(() => customer.delete(2));
 });

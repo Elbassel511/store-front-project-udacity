@@ -9,7 +9,7 @@ const orderStatusCheck = async (
   res: express.Response,
   next: express.NextFunction
 ) => {
-  const id = Number(req.params.id);
+  const id = Number(req.params.orderId);
   if (!id) {
     res.status(400).json("Invalid Request !");
   }
