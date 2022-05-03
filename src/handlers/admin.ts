@@ -25,7 +25,7 @@ const create = async (
     Number(SALT_ROUNDS)
   );
 
-  if (!name || !password) {
+  if (!name || !req.body.password) {
     res.status(400).send("Invalid data");
     return;
   }
@@ -133,6 +133,7 @@ const auth = async (
   const password: string = req.body.password;
   if (!name || !password) {
     res.status(400).send("Invalid Request");
+    return;
   }
   const user: Admin = await admin.auth(name);
   const hashedPassword: string = user.password;

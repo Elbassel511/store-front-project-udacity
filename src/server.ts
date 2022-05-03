@@ -23,6 +23,29 @@ app.use("/customers", customerRouter);
 app.use("/admins", adminRouter);
 app.use("/customer", orderRouter);
 
+// handling errors
+app.use(
+  (
+    err: Error,
+    _req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    console.error(err.message, 500);
+    res.status(500).json("something went wrong !");
+  }
+);
+// handling not found routes
+app.use(
+  (
+    _req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    res.status(404).json("couldn't find that !");
+  }
+);
+
 app.listen(3000, function () {
   console.log(`starting app on: ${address}`);
 });

@@ -12,7 +12,7 @@ const jwtAuth = async (
   const authorizationHeader = req.headers.authorization as unknown as string;
 
   if (!authorizationHeader) {
-    res.status(401).send("Access denied");
+    res.status(401).send("Access denied , no token");
     return;
   }
   const token = authorizationHeader.split(" ")[1];
@@ -20,7 +20,7 @@ const jwtAuth = async (
     jwt.verify(token, process.env.TOKEN_SECRET as unknown as string);
     next();
   } catch (err) {
-    res.status(401).send("Access denied");
+    res.status(401).send("Access denied , invalid token");
     return;
   }
 };
