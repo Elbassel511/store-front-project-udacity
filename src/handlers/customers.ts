@@ -102,7 +102,7 @@ const del = async (req: express.Request, res: express.Response) => {
   await customer
     .delete(id)
     .then((data) =>
-      res.status(200).send(`customer with id: ${id} succefully deleted`)
+      res.status(200).send(`customer with id: ${id} successfully deleted`)
     )
     .catch((err) => {
       throw new Error(err);
