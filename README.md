@@ -139,7 +139,7 @@ This project can be run on a docker container.
 - make your .env file with your environment variables.according to [.env.example](./.env.example) provided.
 - run `docker-compose up` in your terminal.
 - run `npm install` to install all dependencies.
-- run `node run db-migrate` to construct Database schema.
+- run `npm run db-migrate` to construct Database schema.
 - run `psql {database name} {data base user}` then your password.
 - run `INSERT (name ,password,role) VALUES ({super admin name}, {password},{superAdmin})` to create a super admin to be able to add admins and products.
 - run `npm start` to start server on port `3000`.
