@@ -1,54 +1,160 @@
 # Storefront Backend Project
 
-## Getting Started
+## Table of contents
 
-This repo contains a basic Node and Express app to get you started in constructing an API. To get started, clone this repo and run `yarn` in your terminal at the project root.
+- [Storefront Backend Project](#storefront-backend-project)
+  - [Table of contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Built with](#built-with)
+  - [project starter](#project-starter)
+  - [Dependencies](#dependencies)
+  - [Dev-dependencies](#dev-dependencies)
+  - [files](#files)
+  - [Run](#run)
+  - [Database schema](#database-schema)
+  - [End points](#end-points)
+  - [Author](#author)
 
-## Required Technologies
-Your application must make use of the following libraries:
-- Postgres for the database
-- Node/Express for the application logic
-- dotenv from npm for managing environment variables
-- db-migrate from npm for migrations
-- jsonwebtoken from npm for working with JWTs
-- jasmine from npm for testing
+## Overview
 
-## Steps to Completion
+[(Back to top)](#table-of-contents)
 
-### 1. Plan to Meet Requirements
+A RESTfull API for online store (solution for UDACITY project)
 
-In this repo there is a `REQUIREMENTS.md` document which outlines what this API needs to supply for the frontend, as well as the agreed upon data shapes to be passed between front and backend. This is much like a document you might come across in real life when building or extending an API. 
+## Built with
 
-Your first task is to read the requirements and update the document with the following:
-- Determine the RESTful route for each endpoint listed. Add the RESTful route and HTTP verb to the document so that the frontend developer can begin to build their fetch requests.    
-**Example**: A SHOW route: 'blogs/:id' [GET] 
+[(Back to top)](#table-of-contents)
 
-- Design the Postgres database tables based off the data shape requirements. Add to the requirements document the database tables and columns being sure to mark foreign keys.   
-**Example**: You can format this however you like but these types of information should be provided
-Table: Books (id:varchar, title:varchar, author:varchar, published_year:varchar, publisher_id:string[foreign key to publishers table], pages:number)
+- Node.js
+- express
+- typescript
+- javascript
+- jasmine
 
-**NOTE** It is important to remember that there might not be a one to one ratio between data shapes and database tables. Data shapes only outline the structure of objects being passed between frontend and API, the database may need multiple tables to store a single shape. 
+## project starter
 
-### 2.  DB Creation and Migrations
+project starter is provided by udacity in this [repo](https://github.com/udacity/nd0067-c2-creating-an-api-with-postgresql-and-express-project-starter)
 
-Now that you have the structure of the databse outlined, it is time to create the database and migrations. Add the npm packages dotenv and db-migrate that we used in the course and setup your Postgres database. If you get stuck, you can always revisit the database lesson for a reminder. 
+## Dependencies
 
-You must also ensure that any sensitive information is hashed with bcrypt. If any passwords are found in plain text in your application it will not pass.
+[(Back to top)](#table-of-contents)
 
-### 3. Models
+- [express](https://expressjs.com/)
+- [helmet](https://www.npmjs.com/package/helmet)
+- [morgan](https://www.npmjs.com/package/morgan)
+- [apiCache](https://www.npmjs.com/package/apicache)
+- [dotEnv](https://www.npmjs.com/package/dotenv)
+- [postgreSQL](https://www.npmjs.com/package/pg)
+- [db-migrate-pg](https://www.npmjs.com/package/db-migrate-pg)
+- [db-migrate](https://www.npmjs.com/package/db-migrate)
+- [CORS](https://www.npmjs.com/package/cors)
+- [JSON web token](https://www.npmjs.com/package/json-web-token)
 
-Create the models for each database table. The methods in each model should map to the endpoints in `REQUIREMENTS.md`. Remember that these models should all have test suites and mocks.
+## Dev-dependencies
 
-### 4. Express Handlers
+[(Back to top)](#table-of-contents)
 
-Set up the Express handlers to route incoming requests to the correct model method. Make sure that the endpoints you create match up with the enpoints listed in `REQUIREMENTS.md`. Endpoints must have tests and be CORS enabled. 
+- [eslint](https://www.npmjs.com/package/eslint)
+- [jasmine](https://jasmine.github.io/)
+- [typescript](https://www.typescriptlang.org/)
 
-### 5. JWTs
+## files
 
-Add JWT functionality as shown in the course. Make sure that JWTs are required for the routes listed in `REQUIUREMENTS.md`.
+[(Back to top)](#table-of-contents)
 
-### 6. QA and `README.md`
+```cmd
+ store-front-project-udacity
+   ├─ .env.example
+   ├─ .eslintignore
+   ├─ .eslintrc.json
+   ├─ database.json
+   ├─ docker-compose.yml
+   ├─ migrations
+   │  ├─ 20220421215937-custmors.js
+   │  ├─ 20220421220017-products.js
+   │  ├─ 20220421220033-orders.js
+   │  ├─ 20220421220059-order-products.js
+   │  ├─ 20220429125600-admin.js
+   │  └─ sqls
+   │     ├─ 20220421215937-custmors-down.sql
+   │     ├─ 20220421215937-custmors-up.sql
+   │     ├─ 20220421220017-products-down.sql
+   │     ├─ 20220421220017-products-up.sql
+   │     ├─ 20220421220033-orders-down.sql
+   │     ├─ 20220421220033-orders-up.sql
+   │     ├─ 20220421220059-order-products-down.sql
+   │     ├─ 20220421220059-order-products-up.sql
+   │     ├─ 20220429125600-admin-down.sql
+   │     └─ 20220429125600-admin-up.sql
+   ├─ package-lock.json
+   ├─ package.json
+   ├─ README.md
+   ├─ REQUIREMENTS.md
+   ├─ spec
+   │  └─ support
+   │     └─ jasmine.json
+   ├─ src
+   │  ├─ database.ts
+   │  ├─ handlers
+   │  │  ├─ admin.ts
+   │  │  ├─ customers.ts
+   │  │  ├─ helpers
+   │  │  │  ├─ adminCheck.ts
+   │  │  │  ├─ checkEmail.ts
+   │  │  │  ├─ checkName.ts
+   │  │  │  ├─ idCheck.ts
+   │  │  │  ├─ jwtAuth.ts
+   │  │  │  ├─ orderStatusCheck.ts
+   │  │  │  └─ roleCheck.ts
+   │  │  ├─ order.ts
+   │  │  └─ products.ts
+   │  ├─ models
+   │  │  ├─ admin.ts
+   │  │  ├─ customer.ts
+   │  │  ├─ order.ts
+   │  │  └─ product.ts
+   │  ├─ server.ts
+   │  └─ tests
+   │     ├─ handlers
+   │     │  ├─ adminSpec.ts
+   │     │  ├─ customerSpec.ts
+   │     │  ├─ orderSpec.ts
+   │     │  └─ productSpec.ts
+   │     ├─ helpers
+   │     │  └─ reporter.ts
+   │     └─ models
+   │        ├─ adminSpec.ts
+   │        ├─ customerSpec.ts
+   │        ├─ orderSpec.ts
+   │        └─ productSpec.ts
+   └─ tsconfig.json
+```
 
-Before submitting, make sure that your project is complete with a `README.md`. Your `README.md` must include instructions for setting up and running your project including how you setup, run, and connect to your database. 
+## Run
 
-Before submitting your project, spin it up and test each endpoint. If each one responds with data that matches the data shapes from the `REQUIREMENTS.md`, it is ready for submission!
+This project can be run on a docker container.
+
+- clone the project.
+- make sure nodejs is installed on your pc.
+- make your .env file with your environment variables.according to [.env.example](./.env.example) provided.
+- run `docker-compose up` in your terminal.
+- run `npm install` to install all dependencies.
+- run `node run db-migrate` to construct Database schema.
+- run `psql {database name} {data base user}` then your password.
+- run `INSERT (name ,password,role) VALUES ({super admin name}, {password},{superAdmin})` to create a super admin to be able to add admins and products.
+- run `npm start` to start server on port `3000`.
+
+## Database schema
+
+![schema](schema.png)
+
+## End points
+
+end point requirement are provided [REQUIREMENTS.md](./REQUIREMENTS.md)
+
+## Author
+
+[(Back to top)](#table-of-contents)
+
+- Github - [@Elbassel511](https://github.com/Elbassel511)
+- Linked in - [@Hamada Elbassel](https://www.linkedin.com/in/hamadaelbassel/)
