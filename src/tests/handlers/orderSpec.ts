@@ -8,7 +8,7 @@ let customerToken: string;
 const request = supertest(app);
 const newOrder = new Order();
 
-describe("*******************Order end points tests*********************", () => {
+describe("Order end points tests", () => {
   beforeAll(async () => {
     try {
       // log in as a super admin to get token

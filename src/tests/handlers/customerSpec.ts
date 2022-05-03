@@ -25,20 +25,6 @@ describe("Test for customer model end point", () => {
     expect(response.status).toBe(400);
   });
 
-  it("should get back an array of customers", async () => {
-    const response = await request.get("/customers/");
-    expect(response.status).toBe(200);
-  });
-  it("should get back dummy customer", async () => {
-    const response = await request.get("/customers/3");
-    expect(response.status).toBe(200);
-    expect(response.body.first_name).toEqual("customer end point test");
-  });
-  it("delete customer request with token accepted", async () => {
-    const response = await request.delete("/customers/3");
-    expect(response.status).toBe(401);
-    expect(response).toThrowError;
-  });
   it("login and send back token", async () => {
     const response = await request
       .post("/customers/auth")
@@ -46,6 +32,25 @@ describe("Test for customer model end point", () => {
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(String);
     token = response.body;
+  });
+
+  it("should get back an array of customers", async () => {
+    const response = await request
+      .get("/customers/")
+      .set("Authorization", "bearer " + token);
+    expect(response.status).toBe(200);
+  });
+  it("should get back customer", async () => {
+    const response = await request
+      .get("/customers/3")
+      .set("Authorization", "bearer " + token);
+    expect(response.status).toBe(200);
+    expect(response.body.first_name).toEqual("customer end point test");
+  });
+  it("delete customer request with token accepted", async () => {
+    const response = await request.delete("/customers/3");
+    expect(response.status).toBe(401);
+    expect(response).toThrowError;
   });
   it("update customer request without token rejected", async () => {
     const response = await request.put("/customers/3").send({ email: "b@A.c" });

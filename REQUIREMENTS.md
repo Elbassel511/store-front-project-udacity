@@ -19,8 +19,8 @@ The company stakeholders want to create an online storefront to showcase their g
 | End points                            | Description               | token | ID check |                        body                        |
 | :------------------------------------ | :------------------------ | :---: | :------: | :------------------------------------------------: |
 | POST `localhost:3000/customers/auth`  | log in and get back token |   ✖   |    ✖     |                 email && password                  |
-| GET `localhost:3000/customers`        | get all customers data    | ✖ ##  |    ✖     |                         ✖                          |
-| GET `localhost:3000/customers/:id`    | get customer info.        | ✖ ##  |    ✖     |                         ✖                          |
+| GET `localhost:3000/customers`        | get all customers data    |   ✔   |    ✖     |                         ✖                          |
+| GET `localhost:3000/customers/:id`    | get customer info.        |   ✔   |    ✖     |                         ✖                          |
 | POST `localhost:3000/customers/`      | add a customer            |   ✖   |    ✖     |     first_name & last_name? & password & email     |
 | PUT `localhost:3000/customers/`       | update a customer         |   ✔   |    ✔     | first_name \|\| last_name \|\| password \|\| email |
 | DELETE `localhost:3000/customers/:id` | delete a customer         |   ✔   |    ✔     |                         ✖                          |
@@ -65,7 +65,7 @@ _only super admin can get all admins data and add an admin_
 | ------ | ------------------- |
 | id     | integer primary key |
 | name   | varchar(50)         |
-| price  | decimal             |
+| price  | float               |
 | stock  | integer             |
 
 #### customers
