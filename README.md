@@ -137,7 +137,7 @@ This project can be run on a docker container.
 - clone the project.
 - make sure nodejs is installed on your pc.
 - make your .env file with your environment variables.according to [.env.example](./.env.example) provided.
-- run `docker-compose up` in your terminal.
+- run `docker-compose up -d` in your terminal.
 - run `npm install` to install all dependencies.
 - run `npm run migrate-up` to construct Database schema.
   _will construct database schema and a super admin with name and password from .env file_
