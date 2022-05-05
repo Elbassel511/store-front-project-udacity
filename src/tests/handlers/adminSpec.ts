@@ -34,7 +34,7 @@ describe("Test for admin model end point", () => {
   });
 
   it("adds a super Admin rejected if one already exist ", async () => {
-    const response = await await createSuperAdmin();
+    const response = await createSuperAdmin();
     expect(response).toBe("SUPER ADMIN ALREADY EXIST");
   });
 
