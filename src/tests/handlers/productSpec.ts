@@ -2,6 +2,8 @@ import supertest from "supertest";
 import { app } from "../../server";
 import { Product, ProductTable } from "../../models/product";
 import { AdminIns } from "../../models/admin";
+import dotenv from "dotenv";
+dotenv.config();
 
 // //////////////routes to be tested///////////////////////
 // productRoutes.post("/", jwtAuth, adminCheck, create);////
@@ -22,9 +24,11 @@ const admin = new AdminIns();
 
 describe("Test for products model end point", () => {
   beforeAll(async () => {
+    const name = process.env.SUPER_ADMIN_NAME as unknown as string;
+    const password = process.env.SUPER_ADMIN_PASSWORD as unknown as string;
     const response = await request
       .post("/admins/auth")
-      .send({ name: "B", password: "123" });
+      .send({ name, password });
     token = response.body;
   });
   it("adds a product ", async () => {

@@ -149,54 +149,7 @@ const auth = async (
   }
 };
 
-const createSuper = async (
-  req: express.Request,
-  res: express.Response
-): Promise<void> => {
-  const { name }: Admin = req.body;
-  const role: Role = "superAdmin";
-  const password = bcrypt.hashSync(
-    req.body.password + PEPPER,
-    Number(SALT_ROUNDS)
-  );
-
-  if (!name || !password) {
-    res.status(400).send("Invalid data");
-    return;
-  }
-
-  //   check if there is another super Admin
-  const isSuperExist: Boolean = await admin
-    .superAdminSearch()
-    .then((data) => {
-      if (data.length === 0) return false;
-      return true;
-    })
-    .catch((err) => {
-      throw new Error(err);
-    });
-
-  if (isSuperExist) {
-    res.status(401).json("Super Admin Already Exist");
-    return;
-  } else {
-    await admin
-      .create({
-        name,
-        password,
-        role,
-      })
-      .then((data) => {
-        res.status(200).json(data);
-      })
-      .catch((err) => {
-        throw new Error(err);
-      });
-  }
-};
-
 adminRouter.post("/", jwtAuth, roleCheck, checkName, create);
-adminRouter.post("/super", createSuper);
 adminRouter.delete("/:id", jwtAuth, roleCheck, del);
 adminRouter.get("/:id", show);
 adminRouter.get("/", jwtAuth, roleCheck, index);

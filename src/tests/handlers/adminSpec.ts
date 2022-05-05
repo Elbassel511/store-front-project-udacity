@@ -1,6 +1,9 @@
 import supertest from "supertest";
 import { app } from "../../server";
 import { Admin, AdminIns } from "../../models/admin";
+import createSuperAdmin from "../../helper/superAdmin";
+import dotenv from "dotenv";
+dotenv.config();
 
 const request = supertest(app);
 
@@ -30,10 +33,10 @@ const dummySuperAdmin: Admin = {
 describe("Test for admin model end point", () => {
   let token: string;
   let adminToken: string;
+
   it("adds a super Admin ", async () => {
-    const response = await request.post("/admins/super").send(dummySuperAdmin);
-    expect(response.status).toBe(200);
-    expect(response.body.name).toEqual("B");
+    const result = await createSuperAdmin();
+    expect(result).toBe("SUPER ADMIN CREATED");
   });
 
   it("adds a super Admin rejected if one already exist ", async () => {
@@ -42,9 +45,10 @@ describe("Test for admin model end point", () => {
   });
 
   it("login as super Admin and send back token", async () => {
-    const response = await request
-      .post("/admins/auth")
-      .send({ name: "B", password: "123" });
+    const response = await request.post("/admins/auth").send({
+      name: process.env.SUPER_ADMIN_NAME,
+      password: process.env.SUPER_ADMIN_PASSWORD,
+    });
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(String);
     token = response.body;

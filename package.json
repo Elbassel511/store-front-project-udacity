@@ -7,9 +7,9 @@
     "prestart": "npx tsc",
     "start": "node dist/server.js",
     "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess \"node ./dist/server.js\"",
-    "test": "db-migrate db:create store_test && db-migrate --env test up &&cross-env ENV=test jasmine-ts && db-migrate db:drop store_test",
+    "test": "npx db-migrate db:create store_test && npx db-migrate --env test up &&cross-env ENV=test jasmine-ts &&npx db-migrate db:drop store_test",
     "tsc": "tsc",
-    "migrate-up": "npx db-migrate up"
+    "migrate-up": "npx db-migrate up && npx ts-node ./src/helper/createSuperAdmin.ts"
   },
   "author": "Hamada Elbassel",
   "license": "ISC",

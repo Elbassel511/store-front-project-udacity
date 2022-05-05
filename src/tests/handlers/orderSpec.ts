@@ -1,24 +1,27 @@
 import supertest from "supertest";
+import dotenv from "dotenv";
 import { app } from "../../server";
 import { order, Order } from "../../models/order";
 
 let adminToken: string;
 let customerToken: string;
-
+dotenv.config();
 const request = supertest(app);
 const newOrder = new Order();
 
 describe("Order end points tests", () => {
   beforeAll(async () => {
+    const name = process.env.SUPER_ADMIN_NAME;
+    const password = process.env.SUPER_ADMIN_PASSWORD;
     try {
       // log in as a super admin to get token
       let response = await request
         .post("/admins/auth")
-        .send({ name: "B", password: "123" });
+        .send({ name, password });
       adminToken = response.body;
 
       // add a product
-      let x = await request
+      await request
         .post("/products")
         .send({
           name: "A",
@@ -27,7 +30,7 @@ describe("Order end points tests", () => {
         })
         .set("Authorization", "bearer " + adminToken);
       // add a customer
-      let y = await request.post("/customers/").send({
+      await request.post("/customers/").send({
         id: 4,
         first_name: "A",
         last_name: "B",
