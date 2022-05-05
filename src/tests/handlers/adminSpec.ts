@@ -23,12 +23,6 @@ const dummyAdmin: Admin = {
   role: "admin",
   password: "123",
 };
-const dummySuperAdmin: Admin = {
-  id: 2,
-  name: "B",
-  role: "superAdmin",
-  password: "123",
-};
 
 describe("Test for admin model end point", () => {
   let token: string;
@@ -40,8 +34,8 @@ describe("Test for admin model end point", () => {
   });
 
   it("adds a super Admin rejected if one already exist ", async () => {
-    const response = await request.post("/admins/super").send(dummySuperAdmin);
-    expect(response.status).toBe(401);
+    const response = await await createSuperAdmin();
+    expect(response).toBe("SUPER ADMIN ALREADY EXIST");
   });
 
   it("login as super Admin and send back token", async () => {
