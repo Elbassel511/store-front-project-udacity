@@ -25,7 +25,6 @@ describe("customers model", () => {
 
   it("create method should add a customer", async () => {
     const result = await customer.create({
-      id: 1,
       first_name: "ABC",
       last_name: "ABC",
       email: "A@B.c",

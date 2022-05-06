@@ -45,7 +45,6 @@ export class CustomerTable {
         customer.email,
       ]);
       conn.release();
-      console.info(data.rows[0]);
       if (!data.rows[0]) throw new Error(`couldn't create customer`);
       return data.rows[0];
     } catch (err) {

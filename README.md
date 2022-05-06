@@ -11,7 +11,7 @@
   - [Dev-dependencies](#dev-dependencies)
   - [files](#files)
   - [Run](#run)
-  - [Database schema](#database-schema)
+  - [Database port & schema](#database-port--schema)
   - [End points](#end-points)
   - [Author](#author)
 
@@ -143,7 +143,9 @@ This project can be run on a docker container.
   _will construct database schema and a super admin with name and password from .env file_
 - run `npm start` to start server on port `3000`.
 
-## Database schema
+## Database port & schema
+
+**Database is running on port:_5432_**
 
 ![schema](schema.png)
 
