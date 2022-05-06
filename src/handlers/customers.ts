@@ -14,28 +14,28 @@ const customer = new CustomerTable();
 export const customerRouter = express.Router();
 
 const create = async (req: express.Request, res: express.Response) => {
-  const { first_name, last_name, email }: Customer = req.body;
-  const password = bcrypt.hashSync(
-    req.body.password + PEPPER,
-    Number(SALT_ROUNDS)
-  );
+  try {
+    const { first_name, password, last_name, email }: Customer = req.body;
+    if (!first_name || !password || !email) {
+      res.status(400).send("Invalid request data ");
+      throw new Error("bad request");
+    }
+    const hashedPassword = bcrypt.hashSync(
+      req.body.password + PEPPER,
+      Number(SALT_ROUNDS)
+    );
 
-  if (!first_name || !password) {
-    res.status(400).send("Invalid data");
-  }
-  await customer
-    .create({
+    const newCustomer: Customer = {
       first_name,
       last_name,
       email,
-      password,
-    })
-    .then((data) => {
-      res.status(200).json(data);
-    })
-    .catch((err) => {
-      throw new Error(err);
-    });
+      password: hashedPassword,
+    };
+    const data = await customer.create(newCustomer);
+    res.status(200).json(data);
+  } catch (err) {
+    throw new Error(`couldn't create customer ${err}`);
+  }
 };
 
 const show = async (req: express.Request, res: express.Response) => {

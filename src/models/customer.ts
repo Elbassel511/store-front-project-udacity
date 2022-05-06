@@ -37,7 +37,7 @@ export class CustomerTable {
     try {
       const conn = await client.connect();
       const sql =
-        "INSERT INTO customers (first_name,last_name,password,email) VALUES ($1,$2,$3,$4) RETURNING *";
+        "INSERT INTO customers (first_name,last_name,password,email) VALUES ($1,$2,$3,$4) RETURNING *;";
       const data = await conn.query(sql, [
         customer.first_name,
         customer.last_name,
@@ -45,6 +45,8 @@ export class CustomerTable {
         customer.email,
       ]);
       conn.release();
+      console.info(data.rows[0]);
+      if (!data.rows[0]) throw new Error(`couldn't create customer`);
       return data.rows[0];
     } catch (err) {
       throw new Error(`couldn't create customer. Error:${err}`);
