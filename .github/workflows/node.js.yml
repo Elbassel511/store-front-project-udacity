@@ -42,7 +42,7 @@ jobs:
     - name: setup postgres database
       uses: Harmon758/postgresql-action@v1.0.0
       with: 
-        POSTGRES_USER: store_user
-        POSTGRES_PASSWORD: password123
+        postgresql user: store_user
+        postgresql password: password123
         
     - run: npm test
