@@ -41,9 +41,12 @@ jobs:
         cache: 'npm'
     - run: npm install
     - name: setup postgres database
-      uses: Harmon758/postgresql-action@v1.0.0
+      uses: Daniel-Marynicz/postgresql-action@1.0.0
       with: 
-        postgresql user: store_user
-        postgresql password: password1234
+        POSTGRES_USER: store_user
+        POSTGRES_DB: store
+        POSTGRES_PASSWORD: password1234
+        EXPOSED_POSTGRES_PORT: 5432
+        
         
     - run: npm test
