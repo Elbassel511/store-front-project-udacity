@@ -1,0 +1,52 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    env:
+      POSTGRES_HOST: 127.0.0.1
+      POSTGRES_DB: store
+      POSTGRES_DB_test: store_test
+      POSTGRES_USER: store_user
+      POSTGRES_PASSWORD: password1234
+      SUPER_ADMIN_NAME: Hamada
+      SUPER_ADMIN_PASSWORD: 123
+      ENV: dev
+      PEPPER: secret
+      SALT_ROUNDS: 10
+      TOKEN_SECRET: TSK
+      
+    runs-on: ${{matrix.os}}
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+        os: [unbuntu-latest]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm install
+    - name: setup postgres database
+      uses: Daniel-Marynicz/postgresql-action@1.0.0
+      with: 
+        POSTGRES_USER: store_user
+        POSTGRES_DB: store
+        POSTGRES_PASSWORD: password1234
+        EXPOSED_POSTGRES_PORT: 5432
+        
+        
+    - run: npm test
