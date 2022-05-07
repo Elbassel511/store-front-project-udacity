@@ -146,7 +146,7 @@ This project can be run on a docker container.
 
 ## Database port & schema
 
-**Database is running on port:_5432_**
+**Database is running on port: _5432_**
 
 ![schema](schema.png)
 
